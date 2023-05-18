@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="card box-shadow m-2 form-wrap">
+                <div class="card-header text-center">
+                    <h3>Програмный комлекс для рассчета оптических потерь в АОЛС </h3>
+                </div>
+                <form id="form" class="p-3" action='' method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-4 mb-0">
+                            <label for="pout">Мощность на выходе </label>
+                            <input id='pout' type="number" class="form-control" placeholder="Введите число" step="0.0001" value="{{ from_pout }}"  name="from_pout">
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            <label for="pin">Мощность на входе </label>
+                            <input id='pin' type="number" class="form-control" placeholder="Введите число" step="0.0001" value="{{ from_pin }}"  name="from_pin">
+                        </div>
+                        <div class="form-group col-md-4 mb-0">
+                            <label for="daytime">Время суток</label>
+                            <select class="form-control" id="daytime" name="daytime">
+                                {% for time in daytime %}
+                                {% if time == from_day %}
+                                <option value="{{ time }}" selected>{{ time }}</option>
+                                {% else %}
+                                <option value="{{ time }}">{{ time }}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    {% if result >= 0%}
+                        <div class="card col-6 p-0 m-auto">
+                            <div class="card-header text-center">
+                                    <h5>Результат расчета</h5>
+                            </div>
+                            <div class="card-body">
+                                {{ result }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="submit-btn mt-3">
+                        <button type="submit" class="btn btn-primary">Рассчитать</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
