@@ -1,52 +1,128 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="card box-shadow m-2 form-wrap">
-                <div class="card-header text-center">
-                    <h3>Програмный комлекс для рассчета оптических потерь в АОЛС </h3>
-                </div>
-                <form id="form" class="p-3" action='' method="POST">
-                    {% csrf_token %}
-                    <div class="form-row">
-                        <div class="form-group col-md-4 mb-0">
-                            <label for="pout">Мощность на выходе </label>
-                            <input id='pout' type="number" class="form-control" placeholder="Введите число" step="0.0001" value="{{ from_pout }}"  name="from_pout">
-                        </div>
-                        <div class="form-group col-md-4 mb-0">
-                            <label for="pin">Мощность на входе </label>
-                            <input id='pin' type="number" class="form-control" placeholder="Введите число" step="0.0001" value="{{ from_pin }}"  name="from_pin">
-                        </div>
-                        <div class="form-group col-md-4 mb-0">
-                            <label for="daytime">Время суток</label>
-                            <select class="form-control" id="daytime" name="daytime">
-                                {% for time in daytime %}
-                                {% if time == from_day %}
-                                <option value="{{ time }}" selected>{{ time }}</option>
-                                {% else %}
-                                <option value="{{ time }}">{{ time }}</option>
-                                {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <hr>
-                    {% if result >= 0%}
-                        <div class="card col-6 p-0 m-auto">
-                            <div class="card-header text-center">
-                                    <h5>Результат расчета</h5>
-                            </div>
-                            <div class="card-body">
-                                {{ result }}
-                            </div>
-                        </div>
-                    {% endif %}
-                    <div class="submit-btn mt-3">
-                        <button type="submit" class="btn btn-primary">Рассчитать</button>
-                    </div>
-                </form>
+<div class="container">
+    <div class="row">
+        <div class="card box-shadow m-2 form-wrap">
+            <div class="card-header text-center">
+                <h3>Програмный комлекс для расчета оптических потерь в АОЛС </h3>
             </div>
+            <form id="form" class="p-3" action='' method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-12 mb-0">
+                        {% block extra_text %}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>В рамках работы был разработан программный комплекс, позволяющий моделировать
+                                        оптические потери на
+                                        атмосферной оптической линии связи, учитывая влияние различных факторов. Первая
+                                        часть комплекса позволяет вычислить величину километрического затухания
+                                        оптического сигнала в атмосфере, зависящую от метеорологической дальности
+                                        видимости </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        <label for="mdv">Дальность видимости, км </label>
+                        <input id='mdv' type="number" class="form-control" placeholder="Введите число в км" step="0.1"
+                               value="{{ from_mdv }}" name="from_mdv">
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        <label for="waveslen">Длина волны, нм</label>
+                        <select class="form-control" id="waveslen" name="waveslen">
+                            {% for wave in waveslen %}
+                            {% if wave == from_wave %}
+                            <option value="{{ wave }}" selected>{{ wave }}</option>
+                            {% else %}
+                            <option value="{{ wave }}">{{ wave }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                {% if result >= 0%}
+                <div class="card col-4 p-0 m-auto">
+                    <div class="card-header text-center">
+                        <h5>Результат расчета километрического затухания сигнала γ, [дБ/км]</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ result }}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="submit-btn mt-3">
+                    <button type="submit" class="btn btn-primary" form="form">Рассчитать</button>
+                </div>
+            </form>
+            <form id="form1" class="p-3" action='' method="POST">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group col-md-16 mb-0">
+                        {% block extra_text3 %}
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-12">
+                                    <p>Вторая часть комплекса позволит вычислить максимальную длину атмосферной
+                                        оптической линии связи, учитывая метеорологическую дальность видимости и
+                                        конкретное оборудвание, установленное на линии.</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endblock %}
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        <label for="mdv1">Дальность видимости, км </label>
+                        <input id='mdv1' type="number" class="form-control" placeholder="Введите число в км" step="0.1"
+                               value="{{ from_mdv1 }}" name="from_mdv1">
+                    </div>
+                    <div class="form-group col-md-6 mb-0">
+                        <label for="equipment">Модель Оборудования</label>
+                        <select class="form-control" id="equipment" name="equipment">
+                            {% for equip in equipment %}
+                            {% if equip == from_equip %}
+                            <option value="{{ equip }}" selected>{{ equip }}</option>
+                            {% else %}
+                            <option value="{{ equip }}">{{ equip }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <hr>
+                {% if result1%}
+                <div class="card col-6 p-0 m-auto">
+                    <div class="card-header text-center">
+                        <h5>Результат расчета длины атмосферного канала L, [м]</h5>
+                    </div>
+                    <div class="card-body">
+                        {{ result1 }}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="submit-btn mt-3">
+                    <button type="submit" class="btn btn-primary" form="form1">Рассчитать</button>
+                </div>
+                <div class="form-group col-md-12 mb-0">
+                    {% block extra_text4 %}
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <p>В целом, программный комплекс для расчета потерь на атмосферно-оптической линии связи
+                                    облегчает процесс проектирования и анализа систем связи, позволяет более точно
+                                    определить потери сигнала и принять обоснованные решения для обеспечения стабильной
+                                    и надежной передачи данных по оптическим каналам связи.</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+            </form>
         </div>
     </div>
+</div>
 {% endblock %}
